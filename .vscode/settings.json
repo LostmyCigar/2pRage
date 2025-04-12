@@ -56,5 +56,6 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "New Unity Project.sln"
+    "dotnet.defaultSolution": "2pRage.sln",
+    "FSharp.suggestGitignore": false
 }
