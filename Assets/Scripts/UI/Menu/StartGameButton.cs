@@ -1,5 +1,7 @@
 using UnityEngine;
+using Unity.Netcode;
 using Leo;
+using UnityEngine.SceneManagement;
 
 public class StartGameButton : MonoBehaviour
 {
@@ -11,12 +13,11 @@ public class StartGameButton : MonoBehaviour
 
     void Start()
     {
-        Relay.Instance.OnGameCreated += UpdateButton;
-        Relay.Instance.OnPlayerJoined += UpdateButton;
-        UpdateButton();
+        NetworkManager.Singleton.OnClientConnectedCallback += UpdateButton;
+        NetworkManager.Singleton.OnClientDisconnectCallback += UpdateButton;
     }
 
-    private void UpdateButton()
+    private void UpdateButton(ulong clientId)
     {
         if (LobbyInfo.Instance.IsReady)
             startGameButton.interactable = true;
@@ -26,7 +27,8 @@ public class StartGameButton : MonoBehaviour
 
     public void StartGame()
     {
-        if (!LobbyInfo.Instance.IsReady)
+        if (!LobbyInfo.Instance.IsReady || !NetworkManager.Singleton.IsServer)
             return;
+        SceneManager.LoadScene(goToSceneName);
     }
 }

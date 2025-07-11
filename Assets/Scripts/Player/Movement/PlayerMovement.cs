@@ -14,20 +14,18 @@ namespace Leo{
         #endregion
 
         #region  Movement Variables
-        private bool isGrounded;
-        private bool canJump;
-        private bool inHangTime;
+        private bool IsGrounded => Physics2D.OverlapBox(transform.position + stats.GroundCheckOffset, stats.GroundCheckSize, 0f, stats.GroundLayer);
+        private bool InHangTime => hangBufferTimer > 0;
+        private int jumpsLeft;
 
+        private bool CanJump => (IsGrounded || InHangTime) && jumpsLeft > 0;
+
+        private float jumpPressedBufferTimer;
         private float hangBufferTimer;
 
         #endregion
 
         #region Input
-
-        private bool jumpInputPressed;
-        private bool jumpInputReleased;
-        private bool jumpInputHeld;
-
         private Vector2 directionInput;
 
         #endregion
@@ -39,46 +37,52 @@ namespace Leo{
 
         void Update()
         {
-            CheckGrounded();
+            CheckJumpsLeft();
             HandleBuffers();
-            HandleJump();
             HandleGravity();
         
-            ApplyMovement();
+            Move();
         }
 
-        private void CheckGrounded(){
-            isGrounded = Physics2D.OverlapBox(transform.position + stats.GroundCheckOffset, stats.GroundCheckSize, 0f, stats.GroundLayer);
+        
+        private void CheckJumpsLeft(){
+            if (IsGrounded) jumpsLeft = stats.JumpCount;
         }
 
-
-        private void HandleGravity(){
-            if (rb.velocity.y < stats.FallGravityThreshold && !isGrounded){
+        private void HandleGravity()
+        {
+            if (rb.velocity.y < stats.FallGravityThreshold && !IsGrounded)
+            {
                 rb.gravityScale = stats.FallGravityScale;
-            } else rb.gravityScale = 1;
+            }
+            else rb.gravityScale = 1;
         }
 
         private void HandleBuffers()
         {
-            if (isGrounded){
+            if (IsGrounded){
                 hangBufferTimer = stats.CoyoteTime;
-                return;
-            }
+            } else hangBufferTimer -= Time.deltaTime;
 
-            hangBufferTimer -= Time.deltaTime;
+            if (jumpPressedBufferTimer > 0)
+            {
+                jumpPressedBufferTimer -= Time.deltaTime;
+                Jump();
+            }
         }
 
-        private void HandleJump(){
-            if (isGrounded || hangBufferTimer > 0){
-                canJump = true;
-            } else canJump = false;
 
-            if (jumpInputPressed && canJump){
+        private void Jump()
+        {
+            if (CanJump)
+            {
                 rb.velocity = new Vector2(rb.velocity.x, stats.JumpPower);
+                jumpPressedBufferTimer = 0;
+                jumpsLeft--;
             }
         }
 
-        private void ApplyMovement()
+        private void Move()
         {
             rb.velocity = new Vector2(directionInput.x * stats.MovementSpeed, rb.velocity.y);
         }
@@ -93,19 +97,12 @@ namespace Leo{
         public void OnJump(InputAction.CallbackContext context)
         {
             if (!IsLocalPlayer) return;
-            
+
             if (context.started)
             {
-                Debug.Log("Jump Pressed");
-                jumpInputPressed = true;
-                jumpInputHeld = true;
+                Jump();
+                jumpPressedBufferTimer = stats.JumpPressedBuffer;
             }
-            else jumpInputPressed = false;
-            
-            if (context.canceled){
-                jumpInputReleased = true;
-                jumpInputHeld = false;
-            } else jumpInputReleased = false;
         }
 
         #endregion
@@ -116,7 +113,7 @@ namespace Leo{
         void OnDrawGizmos()
         {
 
-            if (isGrounded)
+            if (IsGrounded)
             {
                 Gizmos.color = Color.green;
             }

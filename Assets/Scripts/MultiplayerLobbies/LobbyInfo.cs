@@ -3,7 +3,7 @@ using Unity.Netcode;
 
 namespace Leo
 {
-    public class LobbyInfo : Singleton<LobbyInfo>
+    public class LobbyInfo : NetworkedSingleton<LobbyInfo>
     {
         private string lobbyName;
 

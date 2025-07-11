@@ -12,17 +12,16 @@ public class PlayerInfoUI : MonoBehaviour
 
     private void Start()
     {
-        Relay.Instance.OnGameCreated += UpdateConnectedPlayersText;
-        Relay.Instance.OnPlayerJoined += UpdateConnectedPlayersText;
-        UpdateConnectedPlayersText();
+        NetworkManager.Singleton.OnClientConnectedCallback += UpdateConnectedPlayersText;
+        NetworkManager.Singleton.OnClientDisconnectCallback += UpdateConnectedPlayersText;
     }
 
 
-    [ContextMenu("Update Connected Players Text")]
-    private void UpdateConnectedPlayersText()
+    private void UpdateConnectedPlayersText(ulong clientId)
     {
         var connectedPlayers = LobbyInfo.Instance.CurrentConnectedPlayers.ToString();
         var minPlayers = LobbyInfo.Instance.MinPlayers.ToString();
+
         var s = $"{connectedPlayers}/{minPlayers} Players Connected"; 
         connectedPlayersText.text = s;
     } 

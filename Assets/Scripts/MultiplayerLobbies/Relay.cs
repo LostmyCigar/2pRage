@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Leo
 {
-    public class Relay : Singleton<Relay>
+    public class Relay : NetworkedSingleton<Relay>
     {
         private UnityTransport m_transport;
 

@@ -14,29 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GroundLayer:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 192
   PlayerLayer:
     serializedVersion: 2
     m_Bits: 64
   GroundCheckOffset: {x: 0, y: -0.8, z: 0}
-  GroundCheckSize: {x: 0.75, y: 0.03, z: 0}
-  CeilingCheckSize: {x: 0.75, y: 0.02, z: 0}
-  CeilingCheckOffset: {x: 0, y: 0.4, z: 0}
-  MovementSpeed: 10
-  Acceleration: 84.9
-  GroundDeceleration: 37
-  FallGravityThreshold: 0.1
-  FallGravityScale: 2
+  GroundCheckSize: {x: 0.74, y: 0.03, z: 0}
+  MovementSpeed: 7
+  FallGravityThreshold: 0
+  FallGravityScale: 2.3
   CoyoteTime: 0.1
-  SnapInput: 1
-  VerticalDeadZoneThreshold: 0.3
-  HorizontalDeadZoneThreshold: 0.1
-  MaxSpeed: 5.9
-  AirDeceleration: 18
-  GroundingForce: -1.5
-  GrounderDistance: 0.05
-  JumpPower: 20
-  MaxFallSpeed: 30
-  FallAcceleration: 70
-  JumpEndEarlyGravityModifier: 2
-  JumpBuffer: 0.05
+  JumpPressedBuffer: 0.1
+  JumpPower: 15
+  JumpCount: 1
