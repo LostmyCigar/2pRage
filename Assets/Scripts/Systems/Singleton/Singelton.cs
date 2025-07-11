@@ -11,7 +11,7 @@ namespace Leo
 		{
 			if (instance == null)
 			{
-				instance = FindObjectOfType<T>();
+				instance = FindFirstObjectByType<T>();
 
 				if (instance == null)
 				{
@@ -21,10 +21,10 @@ namespace Leo
 					Debug.Log("Creating Instance of " + typeof(T).Name);
 				}
 			}
-			else if (instance != FindObjectOfType<T>())
+			else if (instance != FindFirstObjectByType<T>())
 			{
 				// If there is another instance already existing, destroy the new one
-				Destroy(FindObjectOfType<T>());
+				Destroy(FindFirstObjectByType<T>());
 			}
 
 			return instance;

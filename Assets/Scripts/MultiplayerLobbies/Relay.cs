@@ -14,6 +14,8 @@ namespace Leo
     {
         private UnityTransport m_transport;
 
+        public int ConnectedPlayersCount => NetworkManager.Singleton.ConnectedClientsIds.Count;
+
         private string m_joinCode;
         public string JoinCode => m_joinCode;
 
