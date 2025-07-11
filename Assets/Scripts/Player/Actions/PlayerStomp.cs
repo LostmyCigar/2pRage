@@ -15,6 +15,8 @@ public class PlayerStomp : NetworkBehaviour
     {
         if (!IsOwner || !collision.CompareTag("Player")) return;
 
+        Debug.Log("Stomped " + collision.name);
+
         if (rb.velocity.y < 0)
         {
             rb.velocity = new Vector2(rb.velocity.x, stats.JumpPower);
