@@ -2,18 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using Leo;
+using System.Threading.Tasks;
 
 public class Player : NetworkBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
+        transform.position = FindFirstObjectByType<SpawnPoint>().transform.position;
         
-    }
+        var color = LobbyInfo.Instance.GetPlayerColor(LobbyInfo.Instance.CurrentConnectedPlayers);
+        GetComponentInChildren<SpriteRenderer>().color = color;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        var name = $"Player {LobbyInfo.Instance.CurrentConnectedPlayers}";
+        GetComponentInChildren<TMPro.TextMeshProUGUI>().text = name;
     }
 }

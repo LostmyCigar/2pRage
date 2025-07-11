@@ -13,6 +13,9 @@ namespace Leo
         [SerializeField]
         private int minPlayers = 2;
 
+        [SerializeField]
+        private Color[] playerColors;
+
         public int MaxPlayers => maxPlayers;
         public int MinPlayers => minPlayers;
 
@@ -20,7 +23,7 @@ namespace Leo
 
         public bool IsFull => CurrentConnectedPlayers >= MaxPlayers;
         public bool IsReady => CurrentConnectedPlayers >= MinPlayers;
-        
+
         public string LobbyName
         {
             get => lobbyName;
@@ -28,6 +31,15 @@ namespace Leo
             {
                 lobbyName = value;
             }
+        }
+        
+        public Color GetPlayerColor(int playerIndex)
+        {
+            if (playerIndex < 0 || playerIndex >= playerColors.Length)
+            {
+                return Color.white;
+            }
+            return playerColors[playerIndex];
         }
     }
 }

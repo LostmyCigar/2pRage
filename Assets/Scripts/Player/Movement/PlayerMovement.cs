@@ -1,9 +1,10 @@
 
 using UnityEngine.InputSystem;
 using UnityEngine;
+using Unity.Netcode;
 
 namespace Leo{
-    public class PlayerMovement : MonoBehaviour
+    public class PlayerMovement : NetworkBehaviour
     {
         [SerializeField] private ScriptableStats stats;
 
@@ -85,16 +86,21 @@ namespace Leo{
         #region Input
         public void OnMove(InputAction.CallbackContext context)
         {
+            if (!IsLocalPlayer) return;
             directionInput = context.ReadValue<Vector2>().normalized;
         }
 
         public void OnJump(InputAction.CallbackContext context)
         {
-            if (context.started){
+            if (!IsLocalPlayer) return;
+            
+            if (context.started)
+            {
                 Debug.Log("Jump Pressed");
                 jumpInputPressed = true;
                 jumpInputHeld = true;
-            } else jumpInputPressed = false;
+            }
+            else jumpInputPressed = false;
             
             if (context.canceled){
                 jumpInputReleased = true;

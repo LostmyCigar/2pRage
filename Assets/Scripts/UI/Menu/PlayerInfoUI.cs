@@ -3,8 +3,6 @@ using System;
 using Unity.Netcode;
 using Leo;
 using TMPro;
-using UnityEditor.EditorTools;
-using Unity.VisualScripting;
 
 public class PlayerInfoUI : MonoBehaviour
 {
