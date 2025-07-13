@@ -1,3 +1,4 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -11,24 +12,15 @@ public class PlayerStomp : NetworkBehaviour
         rb = GetComponentInParent<Rigidbody2D>();
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    public void StompOtherPlayer(GameObject stompedPlayer)
     {
-        Debug.Log("Stomped " + collision.name);
+        if (!IsOwner) return;
 
-        if (!IsOwner || !collision.CompareTag("Player")) return;
+        Rigidbody2D otherRb = stompedPlayer.GetComponent<Rigidbody2D>();
 
-        Debug.Log("Stomped " + collision.name);
+        rb.velocity = new Vector2(rb.velocity.x, stats.JumpPower);
 
-        if (rb.velocity.y < 0)
-        {
-            rb.velocity = new Vector2(rb.velocity.x, stats.JumpPower);
-            // Apply a force to the collided player
-            Rigidbody2D otherRb = collision.GetComponent<Rigidbody2D>();
-            if (otherRb != null)
-            {
-                Vector2 stompForce = new Vector2(0, stats.JumpPower / 2);
-                otherRb.AddForce(stompForce, ForceMode2D.Impulse);
-            }
-        }
+        if (otherRb)
+            otherRb.velocity = new Vector2(otherRb.velocity.x, -(stats.JumpPower/2));
     }
 }
