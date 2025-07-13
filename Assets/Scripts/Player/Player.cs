@@ -6,37 +6,52 @@ using Leo;
 using System;
 
 public class Player : NetworkBehaviour
-{   
+{
+    [SerializeField]
+    private bool spawnAtSpawnPoint = true;
+    
+
     public NetworkVariable<FixedString32Bytes> playerName;
-    public NetworkVariable<Color> playerColor = new NetworkVariable<Color>(
-        default,
-        NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Server);
 
-
-    public string GetName()
+    private void OnEnable()
     {
-        playerName.Value = $"Player {LobbyInfo.Instance.CurrentConnectedPlayers}";
-        GetComponentInChildren<TMPro.TextMeshProUGUI>().text = playerName.Value.ToString();
-        return playerName.Value.ToString();
+        playerName.OnValueChanged += OnNameChange;
     }
 
-    public Color GetColor()
+    private void OnDisable()
     {
-        playerColor.Value = LobbyInfo.Instance.GetPlayerColor(LobbyInfo.Instance.CurrentConnectedPlayers);
-        GetComponentInChildren<SpriteRenderer>().color = playerColor.Value;
-        return playerColor.Value;
+        playerName.OnValueChanged -= OnNameChange;
     }
 
     public override void OnNetworkSpawn()
     {
-        GetName();
-        GetColor();
+        if (IsServer)
+            GetName();
     }
 
     void Start()
     {
-        transform.position = FindFirstObjectByType<SpawnPoint>().transform.position;
+        if (spawnAtSpawnPoint)
+            transform.position = FindFirstObjectByType<SpawnPoint>().transform.position;
+        SetName();
     }
 
+
+    #region Player names
+    public void GetName()
+    {
+        playerName.Value = $"Player {LobbyInfo.Instance.CurrentConnectedPlayers}";
+    }
+
+    private void OnNameChange(FixedString32Bytes oldValue, FixedString32Bytes newValue)
+    {
+        SetName();
+    }
+
+    private void SetName()
+    {
+        GetComponentInChildren<TMPro.TextMeshProUGUI>().text = playerName.Value.ToString();
+    }
+
+    #endregion
 }

@@ -37,11 +37,14 @@ namespace Leo{
 
         void Update()
         {
+            if (!IsOwner)
+                return;
+
             CheckJumpsLeft();
             HandleBuffers();
             HandleGravity();
         
-            Move();
+            MoveRpc();
         }
 
         
@@ -67,12 +70,12 @@ namespace Leo{
             if (jumpPressedBufferTimer > 0)
             {
                 jumpPressedBufferTimer -= Time.deltaTime;
-                Jump();
+                JumpRpc();
             }
         }
 
-
-        private void Jump()
+        [Rpc(SendTo.ClientsAndHost)]
+        private void JumpRpc()
         {
             if (CanJump)
             {
@@ -82,7 +85,8 @@ namespace Leo{
             }
         }
 
-        private void Move()
+        [Rpc(SendTo.ClientsAndHost)]
+        private void MoveRpc()
         {
             rb.velocity = new Vector2(directionInput.x * stats.MovementSpeed, rb.velocity.y);
         }
@@ -90,17 +94,17 @@ namespace Leo{
         #region Input
         public void OnMove(InputAction.CallbackContext context)
         {
-            if (!IsLocalPlayer) return;
+            if (!IsOwner) return;
             directionInput = context.ReadValue<Vector2>().normalized;
         }
 
         public void OnJump(InputAction.CallbackContext context)
         {
-            if (!IsLocalPlayer) return;
+            if (!IsOwner) return;
 
             if (context.started)
             {
-                Jump();
+                JumpRpc();
                 jumpPressedBufferTimer = stats.JumpPressedBuffer;
             }
         }

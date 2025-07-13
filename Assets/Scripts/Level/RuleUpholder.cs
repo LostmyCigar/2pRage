@@ -6,9 +6,6 @@ using UnityEditor;
 
 #if UNITY_EDITOR
 
-/// <summary>
-/// This is here so you can create levels that doesn conform to the rules
-/// </summary>
 public class RuleUpholder : AssetModificationProcessor
 {
     public static string[] OnWillSaveAssets(string[] paths)
@@ -16,7 +13,7 @@ public class RuleUpholder : AssetModificationProcessor
         Debug.Log("OnWillSaveAssets");
         foreach (string path in paths)
             Debug.Log(path);
-
+        //use this to force playing devs to obey the rules when creating levels
 
         
         return paths;

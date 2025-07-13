@@ -13,6 +13,8 @@ public class PlayerStomp : NetworkBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        Debug.Log("Stomped " + collision.name);
+
         if (!IsOwner || !collision.CompareTag("Player")) return;
 
         Debug.Log("Stomped " + collision.name);
